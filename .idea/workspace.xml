@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9d1c5793-6490-41ee-a5b9-e0ad5b22d6b6" name="Default Changelist" comment="Library">
-      <change afterPath="$PROJECT_DIR$/CoreCUDA/Activations.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CoreCUDA/Cost.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CoreCUDA/Initializer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CoreCUDA/Layers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CoreCUDA/Models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CoreCUDA/Optimizers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Neural Network Libary.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/nn_library.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="9d1c5793-6490-41ee-a5b9-e0ad5b22d6b6" name="Default Changelist" comment="Library" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -405,12 +395,12 @@
       <workItem from="1554190221496" duration="453000" />
       <workItem from="1554195618152" duration="4260000" />
       <workItem from="1554286896549" duration="9041000" />
-      <workItem from="1554339436987" duration="4518000" />
+      <workItem from="1554339436987" duration="4714000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="24214000" />
+    <option name="totallyTimeSpent" value="24410000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
