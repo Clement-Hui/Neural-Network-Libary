@@ -1,11 +1,11 @@
 import numpy as np
-from numba import int64, int32, float32, float64, vectorize
+
 
 from Core.Activations import *
 from Core.Initializer import *
 from Core.Optimizers import *
 from Utils.utils import *
-
+import multiprocessing as mp
 
 class Layer:
     def __init__(self,
@@ -64,9 +64,7 @@ class Dense(Layer):
 
         self.activation = activation
 
-    @vectorize([float32(float32, float32),
-                float64(float64, float64)],
-               target='cuda')
+
     def forward(self,
                 X):
         self.X = X
@@ -75,9 +73,7 @@ class Dense(Layer):
         self.A = globals()[self.activation](self.Z)
         return self.A
 
-    @vectorize([float32(float32, float32),
-                float64(float64, float64)],
-               target='cuda')
+
     def backward(self,
                  dA):
 
@@ -89,9 +85,7 @@ class Dense(Layer):
 
         return self.dA_prev
 
-    @vectorize([float32(float32, float32),
-                float64(float64, float64)],
-               target='cuda')
+
     def initialize(self,
                    input_dim,
                    initializer = HeInitializer()):
@@ -100,9 +94,7 @@ class Dense(Layer):
         self.W = initializer.getWeights((self.input_dim, self.output_dim))
         self.b = initializer.getBias((1,self.output_dim))
 
-    @vectorize([float32(float32, float32),
-                float64(float64, float64)],
-               target='cuda')
+
     def optimize(self,
                  optimizer = GradientDescentOptimizer(0.02)):
         dW_step = optimizer.getGradientW(self.dW)
@@ -166,9 +158,7 @@ class Convolution(Layer):
             print("lowering pad size to 0")
             self.pad = 0
 
-    @vectorize([float32(float32, float32),
-                float64(float64, float64)],
-               target='cuda')
+
     def forward(self,
                 X):
 
@@ -187,31 +177,36 @@ class Convolution(Layer):
         n_W = self.n_W
         n_C = self.n_C
 
-        Z = np.zeros((m,n_H, n_W, n_C))
+        self.Z = np.zeros((m,n_H, n_W, n_C))
 
-        X_pad = zero_pad(X,self.pad)
+        self.X_pad = zero_pad(X,self.pad)
 
-        for i in range(m):
 
-            current_pad = X_pad[i]
-            for h in range(n_H):
-                for w in range(n_W):
-                    for c in range(n_C):
-                        vert_start = h * stride
-                        vert_end = vert_start + f
-                        horiz_start = w * stride
-                        horiz_end = horiz_start + f
 
-                        current_slice = current_pad[vert_start:vert_end, horiz_start:horiz_end, c]
+        a = range(m)
 
-                        Z[i, w, h, c] = conv_single_step(current_slice, self.W[:, :, :, c], self.b[:, :, :, c])
+        pool = mp.Pool(20)
+        pool.map(self.one_sample_forward,a)
+
 
         self.A_prev = X
-        return Z
+        return self.Z
 
-    @vectorize([float32(float32, float32),
-                float64(float64, float64)],
-               target='cuda')
+    def one_sample_forward(self,i):
+        f = self.kernel_size
+        current_pad = self.X_pad[i]
+        for h in range(self.n_H):
+            for w in range(self.n_W):
+                for c in range(self.n_C):
+                    vert_start = h * self.stride
+                    vert_end = vert_start + f
+                    horiz_start = w * self.stride
+                    horiz_end = horiz_start + f
+
+                    current_slice = current_pad[vert_start:vert_end, horiz_start:horiz_end, c]
+
+                    self.Z[i, w, h, c] = conv_single_step(current_slice, self.W[:, :, :, c], self.b[:, :, :, c])
+
     def backward(self):
         (n_H_prev,n_W_prev,n_C_prev,m) = self.input_dim.shape
 
@@ -251,9 +246,7 @@ class Convolution(Layer):
             self.dA_prev[i, :, :, :] = current_dA_prev_pad[pad:-pad, pad:-pad, :]
         return self.dA_prev
 
-    @vectorize([float32(float32, float32),
-                float64(float64, float64)],
-               target='cuda')
+
     def initialize(self,
                    input_dim,
                    initializer):
