@@ -65,7 +65,8 @@ class Dense(Layer):
         self.activation = activation
 
     @vectorize([float32(float32, float32),
-                float64(float64, float64)])
+                float64(float64, float64)],
+               target='cuda')
     def forward(self,
                 X):
         self.X = X
@@ -75,7 +76,8 @@ class Dense(Layer):
         return self.A
 
     @vectorize([float32(float32, float32),
-                float64(float64, float64)])
+                float64(float64, float64)],
+               target='cuda')
     def backward(self,
                  dA):
 
@@ -88,7 +90,8 @@ class Dense(Layer):
         return self.dA_prev
 
     @vectorize([float32(float32, float32),
-                float64(float64, float64)])
+                float64(float64, float64)],
+               target='cuda')
     def initialize(self,
                    input_dim,
                    initializer = HeInitializer()):
@@ -98,7 +101,8 @@ class Dense(Layer):
         self.b = initializer.getBias((1,self.output_dim))
 
     @vectorize([float32(float32, float32),
-                float64(float64, float64)])
+                float64(float64, float64)],
+               target='cuda')
     def optimize(self,
                  optimizer = GradientDescentOptimizer(0.02)):
         dW_step = optimizer.getGradientW(self.dW)
@@ -163,7 +167,8 @@ class Convolution(Layer):
             self.pad = 0
 
     @vectorize([float32(float32, float32),
-                float64(float64, float64)])
+                float64(float64, float64)],
+               target='cuda')
     def forward(self,
                 X):
 
@@ -205,7 +210,8 @@ class Convolution(Layer):
         return Z
 
     @vectorize([float32(float32, float32),
-                float64(float64, float64)])
+                float64(float64, float64)],
+               target='cuda')
     def backward(self):
         (n_H_prev,n_W_prev,n_C_prev,m) = self.input_dim.shape
 
@@ -246,7 +252,8 @@ class Convolution(Layer):
         return self.dA_prev
 
     @vectorize([float32(float32, float32),
-                float64(float64, float64)])
+                float64(float64, float64)],
+               target='cuda')
     def initialize(self,
                    input_dim,
                    initializer):
