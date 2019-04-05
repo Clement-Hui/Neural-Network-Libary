@@ -1,4 +1,5 @@
 import numpy as np
+from numba import int64, int32, float32, float64, vectorize
 
 from Core.Activations import *
 from Core.Initializer import *
@@ -63,6 +64,8 @@ class Dense(Layer):
 
         self.activation = activation
 
+    @vectorize([float32(float32, float32),
+                float64(float64, float64)])
     def forward(self,
                 X):
         self.X = X
@@ -71,6 +74,8 @@ class Dense(Layer):
         self.A = globals()[self.activation](self.Z)
         return self.A
 
+    @vectorize([float32(float32, float32),
+                float64(float64, float64)])
     def backward(self,
                  dA):
 
@@ -82,7 +87,8 @@ class Dense(Layer):
 
         return self.dA_prev
 
-
+    @vectorize([float32(float32, float32),
+                float64(float64, float64)])
     def initialize(self,
                    input_dim,
                    initializer = HeInitializer()):
@@ -91,7 +97,8 @@ class Dense(Layer):
         self.W = initializer.getWeights((self.input_dim, self.output_dim))
         self.b = initializer.getBias((1,self.output_dim))
 
-
+    @vectorize([float32(float32, float32),
+                float64(float64, float64)])
     def optimize(self,
                  optimizer = GradientDescentOptimizer(0.02)):
         dW_step = optimizer.getGradientW(self.dW)
@@ -155,10 +162,8 @@ class Convolution(Layer):
             print("lowering pad size to 0")
             self.pad = 0
 
-
-
-
-
+    @vectorize([float32(float32, float32),
+                float64(float64, float64)])
     def forward(self,
                 X):
 
@@ -199,8 +204,8 @@ class Convolution(Layer):
         self.A_prev = X
         return Z
 
-
-
+    @vectorize([float32(float32, float32),
+                float64(float64, float64)])
     def backward(self):
         (n_H_prev,n_W_prev,n_C_prev,m) = self.input_dim.shape
 
@@ -240,6 +245,8 @@ class Convolution(Layer):
             self.dA_prev[i, :, :, :] = current_dA_prev_pad[pad:-pad, pad:-pad, :]
         return self.dA_prev
 
+    @vectorize([float32(float32, float32),
+                float64(float64, float64)])
     def initialize(self,
                    input_dim,
                    initializer):
