@@ -1,6 +1,6 @@
 import numpy as np
 
-
+from numba import jit
 from Core.Activations import *
 from Core.Initializer import *
 from Core.Optimizers import *
@@ -185,13 +185,14 @@ class Convolution(Layer):
 
         a = range(m)
 
-        pool = mp.Pool(20)
+        pool = mp.Pool(4)
         pool.map(self.one_sample_forward,a)
 
 
         self.A_prev = X
         return self.Z
 
+    @jit
     def one_sample_forward(self,i):
         f = self.kernel_size
         current_pad = self.X_pad[i]
