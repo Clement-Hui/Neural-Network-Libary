@@ -192,37 +192,40 @@ class Convolution(Layer):
                         horiz_start = w * stride
                         horiz_end = horiz_start + f
 
-                        current_slice = current_pad[vert_start:vert_end, horiz_start:horiz_end, c]
+                        current_slice = current_pad[vert_start:vert_end, horiz_start:horiz_end, :]
 
                         Z[i, w, h, c] = conv_single_step(current_slice, self.W[:, :, :, c], self.b[:, :, :, c])
 
+        self.Z = Z
         self.A_prev = X
         return Z
 
 
 
-    def backward(self):
-        (n_H_prev,n_W_prev,n_C_prev,m) = self.input_dim.shape
-
+    def backward(self,
+                 dA):
+        (m,n_H_prev,n_W_prev,n_C_prev) = self.A_prev.shape
+        self.dZ = dA
         pad = self.pad
         stride = self.stride
-        f = self.filter_size
+        f = self.kernel_size
         n_H = self.n_H
         n_W = self.n_W
         n_C = self.n_C
 
-        Z = np.zeros((n_H, n_W, n_C, m))
+        Z = np.zeros((m,n_H, n_W, n_C))
 
-        self.dA_prev = np.empty((n_H_prev, n_W_prev, n_C_prev, m))
+        self.dA_prev = np.empty((m,n_H_prev, n_W_prev, n_C_prev))
         self.dW = np.empty((f, f, n_C_prev, n_C))
-        db = np.empty((1, 1, 1, n_C))
+        self.db = np.empty((1, 1, 1, n_C))
 
-        A_pad = zero_pad(self.A, pad)
-        dA_prev_pad = zero_pad(self.dA, pad)
+        self.dA = dA
+        A_prev_pad = zero_pad(self.A_prev, pad)
+        dA_prev_pad = zero_pad(self.dA_prev, pad)
 
         for i in range(m):
 
-            current_A_pad = A_pad[i]
+            current_A_prev_pad = A_prev_pad[i]
             current_dA_prev_pad = dA_prev_pad[i]
             for h in range(n_H):
                 for w in range(n_W):
@@ -232,12 +235,17 @@ class Convolution(Layer):
                         horiz_start = w * stride
                         horiz_end = horiz_start + f
 
-                        a_slice = current_A_pad[vert_start:vert_end, horiz_start:horiz_end, :]
+                        a_slice = current_A_prev_pad[vert_start:vert_end, horiz_start:horiz_end, :]
                         da_slice = current_dA_prev_pad[vert_start:vert_end, horiz_start:horiz_end, :]
                         da_slice += self.W[:, :, :, c] * self.dZ[i, h, w, c]
                         self.dW[:, :, :, c] += a_slice * self.dZ[i, h, w, c]
                         self.db[:, :, :, c] += self.dZ[i, h, w, c]
-            self.dA_prev[i, :, :, :] = current_dA_prev_pad[pad:-pad, pad:-pad, :]
+
+            if pad == 0:
+                self.dA_prev[i, :, :, :] = current_dA_prev_pad[:, :, :]
+            else:
+                self.dA_prev[i, :, :, :] = current_dA_prev_pad[pad:-pad, pad:-pad, :]
+
         return self.dA_prev
 
     def initialize(self,
@@ -254,7 +262,49 @@ class Convolution(Layer):
         self.W = initializer.getConvWeights(self.input_dim,self.kernel_size,self.n_C)
         self.b = initializer.getConvBias((1,1,1,self.n_C))
 
+    def optimize(self,
+                 optimizer = GradientDescentOptimizer(0.02)):
+        dW_step = optimizer.getGradientW(self.dW)
+        db_step = optimizer.getGradientb(self.db)
 
+        self.W -= dW_step
+        self.b -= db_step
+
+class Flatten(Layer):
+    def __init__(self,
+                 input_dim=None):
+        self.input_dim = input_dim
+
+
+
+    def forward(self,
+                X):
+        A = X.reshape(-1,self.output_dim)
+        return A
+
+
+
+    def backward(self,
+                 dA):
+
+        dA_prev = dA.reshape(-1,self.input_dim[0],self.input_dim[1],self.input_dim[2])
+
+
+
+        return dA_prev
+
+
+    def initialize(self,
+                   input_dim,
+                   initializer = HeInitializer()):
+        self.input_dim = input_dim
+        self.output_dim = input_dim[0] * input_dim[1] * input_dim[2]
+
+
+
+    def optimize(self,
+                 optimizer = GradientDescentOptimizer(0.02)):
+        return None
 
 
 
