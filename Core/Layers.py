@@ -39,6 +39,24 @@ class Layer:
                    initializer):
         raise NotImplementedError
 
+    def optimize(self,
+                 optimizer = GradientDescentOptimizer(0.02)):
+        if isinstance(optimizer,AdamOptimizer):
+            dW_step,self.vdW,self.sdW = optimizer.getGradientW(self.dW,self.vdW,self.sdW)
+            db_step,self.vdb,self.sdb = optimizer.getGradientb(self.db,self.vdb,self.sdb)
+        else:
+            dW_step = optimizer.getGradientW(self.dW)
+            db_step = optimizer.getGradientb(self.db)
+
+        self.W -= dW_step
+        self.b -= db_step
+
+    def init_adam(self):
+        self.vdW = np.zeros(self.W.shape)
+        self.vdb = np.zeros(self.b.shape)
+        self.sdW = np.zeros(self.W.shape)
+        self.sdb = np.zeros(self.b.shape)
+
 
 class Dense(Layer):
     def __init__(self,
@@ -90,15 +108,9 @@ class Dense(Layer):
 
         self.W = initializer.getWeights((self.input_dim, self.output_dim))
         self.b = initializer.getBias((1,self.output_dim))
+        super().init_adam()
 
 
-    def optimize(self,
-                 optimizer = GradientDescentOptimizer(0.02)):
-        dW_step = optimizer.getGradientW(self.dW)
-        db_step = optimizer.getGradientb(self.db)
-
-        self.W -= dW_step
-        self.b -= db_step
 
 
 class Convolution(Layer):
@@ -199,6 +211,8 @@ class Convolution(Layer):
         self.Z = Z
         self.A_prev = X
 
+        test = (Z == np.nan)
+
 
         return Z
 
@@ -214,7 +228,7 @@ class Convolution(Layer):
         n_H = self.n_H
         n_W = self.n_W
         n_C = self.n_C
-
+        test = (dA == np.nan)
         Z = np.zeros((m,n_H, n_W, n_C))
 
         self.dA_prev = np.empty((m,n_H_prev, n_W_prev, n_C_prev))
@@ -238,15 +252,19 @@ class Convolution(Layer):
                         horiz_end = horiz_start + f
 
                         a_slice = current_A_prev_pad[vert_start:vert_end, horiz_start:horiz_end, :]
-                        da_slice = current_dA_prev_pad[vert_start:vert_end, horiz_start:horiz_end, :]
-                        da_slice += self.W[:, :, :, c] * self.dZ[i, h, w, c]
+                        current_dA_prev_pad[vert_start:vert_end, horiz_start:horiz_end, :] += self.W[:, :, :, c] * self.dZ[i, h, w, c]
                         self.dW[:, :, :, c] += a_slice * self.dZ[i, h, w, c]
                         self.db[:, :, :, c] += self.dZ[i, h, w, c]
+
+            current_dA_prev_pad = np.nan_to_num(current_dA_prev_pad)
+
 
             if pad == 0:
                 self.dA_prev[i, :, :, :] = current_dA_prev_pad[:, :, :]
             else:
                 self.dA_prev[i, :, :, :] = current_dA_prev_pad[pad:-pad, pad:-pad, :]
+
+        self.dW = np.nan_to_num(self.dW)
 
         return self.dA_prev
 
@@ -268,13 +286,9 @@ class Convolution(Layer):
 
         self.output_dim = (self.n_H, self.n_W, self.n_C)
 
-    def optimize(self,
-                 optimizer = GradientDescentOptimizer(0.02)):
-        dW_step = optimizer.getGradientW(self.dW)
-        db_step = optimizer.getGradientb(self.db)
+        super().init_adam()
 
-        self.W -= dW_step
-        self.b -= db_step
+
 
 class Flatten(Layer):
     def __init__(self,
