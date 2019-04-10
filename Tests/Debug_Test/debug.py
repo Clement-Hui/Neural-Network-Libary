@@ -27,6 +27,7 @@ model.compile()
 
 
 
+
 model.train(x_train,y_train,optimizer=AdamOptimizer(0.001,epsilon=1e-6),cost_function="SquaredError",epoch=50,print_cost_divisor=1,validation_X=x_test,validation_Y=y_test,minibatch_size=32)
 
 
