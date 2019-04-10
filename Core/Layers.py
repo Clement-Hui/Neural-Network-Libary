@@ -198,6 +198,8 @@ class Convolution(Layer):
 
         self.Z = Z
         self.A_prev = X
+
+
         return Z
 
 
@@ -251,16 +253,20 @@ class Convolution(Layer):
     def initialize(self,
                    input_dim,
                    initializer):
+
+        if self.input_dim == None:
+            self.input_dim = input_dim
         (n_H_prev, n_W_prev, n_C_prev) = self.input_dim
 
         self.n_H = int(np.floor((n_H_prev - self.kernel_size + 2 * self.pad) / self.stride) + 1)
         self.n_W = int(np.floor((n_W_prev - self.kernel_size + 2 * self.pad) / self.stride) + 1)
 
         self.output_dim = (self.n_H, self.n_W, self.n_C)
-        if self.input_dim == None:
-            self.input_dim = input_dim
+
         self.W = initializer.getConvWeights(self.input_dim,self.kernel_size,self.n_C)
         self.b = initializer.getConvBias((1,1,1,self.n_C))
+
+        self.output_dim = (self.n_H, self.n_W, self.n_C)
 
     def optimize(self,
                  optimizer = GradientDescentOptimizer(0.02)):
