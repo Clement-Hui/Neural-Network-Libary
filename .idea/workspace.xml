@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9d1c5793-6490-41ee-a5b9-e0ad5b22d6b6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Initializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Initializer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Layers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Layers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Optimizers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Optimizers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tests/Debug_Test/debug.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/Debug_Test/debug.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utils/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/utils.py" afterDir="false" />
-    </list>
+    <list default="true" id="9d1c5793-6490-41ee-a5b9-e0ad5b22d6b6" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,8 +90,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Tests/Debug_Test/debug.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
+            <state relative-caret-position="476">
+              <caret line="28" selection-start-line="28" selection-end-line="28" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -289,7 +282,7 @@
       <workItem from="1554195618152" duration="4260000" />
       <workItem from="1554286896549" duration="9041000" />
       <workItem from="1554339436987" duration="11608000" />
-      <workItem from="1554716219749" duration="16186000" />
+      <workItem from="1554716219749" duration="16893000" />
     </task>
     <task id="LOCAL-00001" summary="Library">
       <created>1554434156946</created>
@@ -333,11 +326,25 @@
       <option name="project" value="LOCAL" />
       <updated>1554901312410</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Library">
+      <created>1554908188312</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1554908188312</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Library">
+      <created>1554908211349</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1554908211349</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="47490000" />
+    <option name="totallyTimeSpent" value="48197000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -356,7 +363,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49930555" visible="true" weight="0.20995963" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49930555" weight="0.20995963" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39973083" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -519,8 +526,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Tests/Debug_Test/debug.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
+        <state relative-caret-position="476">
+          <caret line="28" selection-start-line="28" selection-end-line="28" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>

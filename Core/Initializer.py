@@ -24,7 +24,7 @@ class HeInitializer(Initializer):
                        input_dim,
                        kernel_size,
                        n_C):
-        num = input_dim[0] * input_dim[1] * input_dim[2]
+        num = kernel_size*kernel_size*n_C
         W = np.array(np.random.randn(kernel_size,kernel_size,input_dim[2],n_C) * np.sqrt(2/num), dtype=np.float64)
         return W
 
