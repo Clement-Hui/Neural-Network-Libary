@@ -18,8 +18,9 @@ y_test = to_categorical(y_test,10)[:1000]
 
 
 model = Squential()
-model.add(Convolution(input_dim=(28,28,1),filter_num=20))
-model.add(Convolution(filter_num=40))
+model.add(Convolution(input_dim=(28,28,1),filter_num=1))
+model.add(Activation("sigmoid"))
+model.add(Convolution(filter_num=1))
 model.add(Flatten())
 model.add(Dense(100,activation="sigmoid"))
 model.add(Dense(10,activation="sigmoid"))

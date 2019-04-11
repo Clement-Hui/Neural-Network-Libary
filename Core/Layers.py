@@ -327,6 +327,33 @@ class Flatten(Layer):
         return None
 
 
+class Activation(Layer):
+    def __init__(self,
+                 activation="relu"):
+
+
+        self.activation = activation
+
+    def forward(self,
+                X):
+        self.Z = X
+        self.A = globals()[self.activation](self.Z)
+        return self.A
+
+    def backward(self,
+                 dA):
+
+        self.dA = dA
+        self.dZ = globals()[self.activation+"_backward"](self.dA,self.Z)
+
+        return self.dZ
+
+
+    def initialize(self,
+                   input_dim,
+                   initializer = HeInitializer()):
+        return None
+
 
 
 
