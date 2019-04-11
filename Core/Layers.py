@@ -352,6 +352,7 @@ class Activation(Layer):
     def initialize(self,
                    input_dim,
                    initializer = HeInitializer()):
+        self.output_dim = input_dim
         return None
 
 
