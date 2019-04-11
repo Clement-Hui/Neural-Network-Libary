@@ -355,6 +355,9 @@ class Activation(Layer):
         self.output_dim = input_dim
         return None
 
+    def optimize(self,
+                 optimizer = GradientDescentOptimizer(0.02)):
+        return None
 
 
 

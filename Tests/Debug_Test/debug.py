@@ -18,9 +18,9 @@ y_test = to_categorical(y_test,10)[:1000]
 
 
 model = Squential()
-model.add(Convolution(input_dim=(28,28,1),filter_num=1))
+model.add(Convolution(input_dim=(28,28,1),filter_num=10))
 model.add(Activation("sigmoid"))
-model.add(Convolution(filter_num=1))
+model.add(Convolution(filter_num=10))
 model.add(Flatten())
 model.add(Dense(100,activation="sigmoid"))
 model.add(Dense(10,activation="sigmoid"))
@@ -29,6 +29,6 @@ model.compile()
 
 
 
-model.train(x_train,y_train,optimizer=AdamOptimizer(0.001,epsilon=1e-6),cost_function="SquaredError",epoch=50,print_cost_divisor=1,validation_X=x_test,validation_Y=y_test,minibatch_size=32)
+model.train(x_train,y_train,optimizer=AdamOptimizer(0.0001,epsilon=1e-6),cost_function="SquaredError",epoch=50,print_cost_divisor=1,validation_X=x_test,validation_Y=y_test,minibatch_size=50)
 
 
