@@ -211,17 +211,20 @@ class Convolution(Layer):
         self.Z = Z
         self.A_prev = X
 
-        test = (Z == np.nan)
+        np.nan_to_num(self.Z,False)
+        self.Z[self.Z == 0] = 1
 
 
-        return Z
+
+
+        return self.Z
 
 
 
     def backward(self,
                  dA):
         (m,n_H_prev,n_W_prev,n_C_prev) = self.A_prev.shape
-        self.dZ = dA
+        self.dZ = np.clip(dA,-500,500)
         pad = self.pad
         stride = self.stride
         f = self.kernel_size

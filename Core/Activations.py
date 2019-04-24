@@ -2,7 +2,8 @@ import numpy as np
 
 
 def relu(Z):
-
+    np.nan_to_num(Z)
+    Z[Z == 0] = 1
     A = np.maximum(Z,0)
 
     return A

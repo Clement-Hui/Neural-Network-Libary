@@ -3,6 +3,7 @@ from Core.Layers import Layer
 from Core.Optimizers import Optimizer
 from Core.Cost import *
 from Utils.utils import *
+import matplotlib.pyplot as plt
 
 class Model:
     def __init__(self):
@@ -50,10 +51,12 @@ class Squential(Model):
               minibatch_size = 128,
               validation_divisor = 10,
               validation_X = None,
-              validation_Y = None
+              validation_Y = None,
+              minibatch_printcost = False
               ):
 
         X_batch ,Y_batch,num = minibatch_seperator(X,Y,minibatch_size)
+        cost_array = []
 
         for i in range(epoch):
             for j in range(num):
@@ -63,11 +66,15 @@ class Squential(Model):
                 dAL = globals()[cost_function+"_backward"](AL,Y_current)
                 self.backward(dAL)
                 self.optimize(optimizer)
+                if minibatch_printcost:
+                    print(f"Iteration {i} minibatch {j}  Cost {cost}")
+                cost_array.append(cost)
+
 
             if (i% print_cost_divisor) == 0:
                 print(f"Iteration {i} Cost {cost}")
 
-            if (i% validation_divisor) == 0:
+            if (i% validation_divisor) == 0 and i!=0:
                 AL = self.forward(validation_X)
                 AL = np.round(AL)
 
