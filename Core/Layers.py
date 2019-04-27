@@ -42,8 +42,9 @@ class Layer:
     def optimize(self,
                  optimizer = GradientDescentOptimizer(0.02)):
         if isinstance(optimizer,AdamOptimizer):
-            dW_step,self.vdW,self.sdW = optimizer.getGradientW(self.dW,self.vdW,self.sdW)
-            db_step,self.vdb,self.sdb = optimizer.getGradientb(self.db,self.vdb,self.sdb)
+            self.t += 1
+            dW_step,self.mtW,self.vtW = optimizer.getGradientW(self.dW,self.mtW,self.vtW,self.t)
+            db_step,self.mtb,self.vtb = optimizer.getGradientb(self.db,self.mtb,self.vtb,self.t)
         else:
             dW_step = optimizer.getGradientW(self.dW)
             db_step = optimizer.getGradientb(self.db)
@@ -52,10 +53,12 @@ class Layer:
         self.b -= db_step
 
     def init_adam(self):
-        self.vdW = np.zeros(self.W.shape)
-        self.vdb = np.zeros(self.b.shape)
-        self.sdW = np.zeros(self.W.shape)
-        self.sdb = np.zeros(self.b.shape)
+        self.mtW = np.zeros(self.W.shape)
+        self.vtW = np.zeros(self.W.shape)
+        self.mtb = np.zeros(self.b.shape)
+        self.vtb = np.zeros(self.b.shape)
+        self.t = 0
+
 
 
 class Dense(Layer):
@@ -234,9 +237,9 @@ class Convolution(Layer):
         test = (dA == np.nan)
         Z = np.zeros((m,n_H, n_W, n_C))
 
-        self.dA_prev = np.empty((m,n_H_prev, n_W_prev, n_C_prev))
-        self.dW = np.empty((f, f, n_C_prev, n_C))
-        self.db = np.empty((1, 1, 1, n_C))
+        self.dA_prev = np.zeros((m,n_H_prev, n_W_prev, n_C_prev))
+        self.dW = np.zeros((f, f, n_C_prev, n_C))
+        self.db = np.zeros((1, 1, 1, n_C))
 
         self.dA = dA
         A_prev_pad = zero_pad(self.A_prev, pad)
@@ -258,6 +261,8 @@ class Convolution(Layer):
                         current_dA_prev_pad[vert_start:vert_end, horiz_start:horiz_end, :] += self.W[:, :, :, c] * self.dZ[i, h, w, c]
                         self.dW[:, :, :, c] += a_slice * self.dZ[i, h, w, c]
                         self.db[:, :, :, c] += self.dZ[i, h, w, c]
+                        if np.amax(self.dW) > 10000:
+                            print("big value")
 
             current_dA_prev_pad = np.nan_to_num(current_dA_prev_pad)
 

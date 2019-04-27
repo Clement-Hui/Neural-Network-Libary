@@ -19,8 +19,8 @@ def minibatch_seperator(X,
     Y_batches = []
 
     for i in range(minibatch_num):
-        X_batches.append(shuffled_X[i * minibatch_size:(i + 1) * minibatch_size - 1])
-        Y_batches.append(shuffled_Y[i * minibatch_size:(i + 1) * minibatch_size - 1])
+        X_batches.append(shuffled_X[i * minibatch_size:(i + 1) * minibatch_size])
+        Y_batches.append(shuffled_Y[i * minibatch_size:(i + 1) * minibatch_size])
 
     if divisible == False:
         X_batches.append(shuffled_X[(minibatch_num - 1) * minibatch_size:-1])

@@ -57,18 +57,25 @@ class Squential(Model):
 
         X_batch ,Y_batch,num = minibatch_seperator(X,Y,minibatch_size)
         cost_array = []
-
+        acc_array = []
         for i in range(epoch):
             for j in range(num):
                 X_current,Y_current = X_batch[j],Y_batch[j]
+                a = X_batch[0][0].reshape(28,28)
                 AL = self.forward(X_current)
                 cost = globals()[cost_function](AL,Y_current)
                 dAL = globals()[cost_function+"_backward"](AL,Y_current)
                 self.backward(dAL)
                 self.optimize(optimizer)
+                rounded_AL = np.round(AL)
+                corrects,wrongs = evaluate(rounded_AL,Y_current)
+
                 if minibatch_printcost:
-                    print(f"Iteration {i} minibatch {j}  Cost {cost}")
+                    print(f"Iteration {i} minibatch {j}  Cost {cost} Accuracy {corrects/(wrongs+corrects)*100} %")
+                acc_array.append(corrects / (wrongs + corrects))
                 cost_array.append(cost)
+
+
 
 
             if (i% print_cost_divisor) == 0:
@@ -86,6 +93,7 @@ class Squential(Model):
                  AL,
                  Y):
         return evaluate(AL,Y)
+
 
 
 

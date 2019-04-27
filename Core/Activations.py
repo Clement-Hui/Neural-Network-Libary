@@ -2,14 +2,15 @@ import numpy as np
 
 
 def relu(Z):
-    np.nan_to_num(Z)
-    Z[Z == 0] = 1
+
+    
     A = np.maximum(Z,0)
 
     return A
 
 def relu_backward(dA,Z):
-    dZ = np.array(dA, copy=True)
+    A = relu(Z)
+    dZ  = np.multiply(dA, np.int64(A > 0))
     dZ[Z <= 0] = 0
     return dZ
 
@@ -22,6 +23,5 @@ def tanh(x):
 
 
 def sigmoid_backward(dA, Z):
-    A = sigmoid(Z)
-    dZ = dA*A*(1-A)
+    dZ = np.exp(-Z)/(1+np.exp(-Z))**2 * dA
     return dZ

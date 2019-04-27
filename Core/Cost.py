@@ -2,7 +2,7 @@ import numpy as np
 
 
 def SquaredError(AL,Y):
-    E = np.sum((AL-Y) ** 2) / Y.shape[0]
+    E = np.mean((AL-Y)**2)
     return E
 
 def SquaredError_backward(AL,Y):
