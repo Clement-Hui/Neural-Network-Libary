@@ -7,3 +7,7 @@ A simple NN Libary that I created in around 2019 to learn more about machine lea
 - Activation layers (Relo, Sigmoid, tanh)
 - Initializers
 - Utils for data processing
+
+## Libraries used
+- Numpy
+- pickle
