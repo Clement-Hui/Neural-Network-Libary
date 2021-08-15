@@ -4,7 +4,7 @@ A simple NN libary that I created in around 2019 to learn more about machine lea
 ## Features
 - Fully Connected Layers
 - Convolutional Layers
-- Activation layers (Relo, Sigmoid, tanh)
+- Activation layers (Relu, Sigmoid, tanh)
 - Initializers
 - Utils for data processing
 
