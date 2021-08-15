@@ -1,5 +1,5 @@
-# Neural-Network-Libary
-A simple NN libary that I created in around 2019 to learn more about machine learning
+# Neural-Network-Library
+A simple NN library that I created in around 2019 to learn more about machine learning
 
 ## Features
 - Fully Connected Layers
